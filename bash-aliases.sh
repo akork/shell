@@ -1,13 +1,18 @@
-#shopt -s expand_aliases
-
-alias pd='popd'
+# shopt -s expand_aliases
 # to reload bash: bash --login
-# alias vi='vim'
-alias la='gls --color=always -lGhA --group-directories-first'
-alias l='gls --color=always -lGhA --group-directories-first | tail -n +2'
-#alias la='ls -lGa'
+
+# navigation
+alias pd='popd'
+
+# ls
 alias ls='ls -G'
 alias s='ls -G'
+alias sa='ls -la'
+
+# git
+alias gs='git status'
+alias gc='git commit'
+alias gr='git reset'
 
 alias nc='cd ~/dropbox/studies/_cs/nc'
 alias na='cd ~/dropbox/studies/_cs/na'
