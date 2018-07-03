@@ -7,11 +7,13 @@ alias pd='popd'
 # ls
 alias ls='ls -G'
 alias s='ls -G'
-alias sa='ls -la'
+alias sa='ls -a'
+alias sal='ls -al'
 
 # git
 alias gs='git status'
-alias gc='git commit'
+alias gc='git commit -m'
+alias gca='git commit -am'
 alias gr='git reset'
 
 alias nc='cd ~/dropbox/studies/_cs/nc'
