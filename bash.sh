@@ -1,3 +1,5 @@
+echo "~/yd/cfg/sh/bash.sh loading"
+
 export TERM=screen-256color
 
 PS1=" \[\033[1;33m\][\W]\$ \[\033[1;33m\]" # default color: \[\033[0m\]"

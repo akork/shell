@@ -1,19 +1,27 @@
-# shopt -s expand_aliases
 # to reload bash: bash --login
+# login shell:
+#       /etc/profile (evals path_helper)
+#       ~/.bash_profile (or ~/.bash_login or ~/.profile) (loads ~/.bashrc)
+# non-login shell:
+#       /etc/bashrc
+#       ~/.bashrc
+
+echo "~/yd/cfg/sh/sh.sh loading"
 
 # variables {{{
 
-export scratch='/Users/Aleksey/Dropbox/Studies/_CS/playground/scratch'
-export dot='/users/aleksey/dropbox/settings'
-export dl='/users/aleksey/downloads'
+export scratch='/Users/ak/Dropbox/Studies/_CS/playground/scratch'
+export dot='/users/ak/dropbox/settings'
+export dl='/users/ak/downloads'
 export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home"
 
 # }}}
 # path {{{
 
+# /etc/paths
 export PATH="$dot/scripts:$PATH"
-export PATH="/Users/Aleksey/anaconda3/bin:$PATH"
+export PATH="/Users/ak/anaconda3/bin:$PATH"
 export PATH="/opt/local/bin:$PATH" # macports location
 
 # }}}
@@ -39,9 +47,9 @@ alias d..='ls -al'
 # open
 alias o='open'
 alias op='open -a'
-alias otp='ds && open $topdownload'
-alias ods='ds && open $topdownload'
-alias topd='ds && open $topdownload'
+alias otp='dl && open $topdownload'
+alias ods='dl && open $topdownload'
+alias topd='dl && open $topdownload'
 
 # git
 git config --global alias.hist "log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(bold white)%s %C(reset) %C(green){{%an}}%C(reset) %C(bold red)%d%C(reset)' --graph --date=short"
@@ -54,8 +62,8 @@ alias kraken='open -a Gitkraken --args -p "$(pwd)"'
 # emacs
 alias e='emacs -nw --debug-init'
 alias em='emacs &!'
-alias ema='env HOME=/Users/Aleksey/.emacs-vanilla emacs -nw'
-alias emac='env HOME=/Users/Aleksey/.emacs-vanilla emacs &!'
+alias ema='env HOME=/Users/ak/.emacs-vanilla emacs -nw'
+alias emac='env HOME=/Users/ak/.emacs-vanilla emacs &!'
 
 # binaries
 alias cal='gcal --starting-day=1 .+'
@@ -64,10 +72,17 @@ alias py='python3'
 alias vi=vim
 alias tr=transmission-remote
 alias trl='transmission-remote -l'
-alias trt='transmission-remote -t'
+# alias tri='transmission-remote -t '
+alias trdf='transmission-daemon --foreground'
+alias trd='transmission-daemon'
 
 # }}}
 # functions {{{
+
+# transmission:
+tri () {
+    transmission-remote -t $1 -i
+}
 
 # recent downloads
 
@@ -76,7 +91,7 @@ mdl () {
 	find . -type f | gsed 's/^\(.*\)$/printf "\\"\1\\"  "; mdls -name kMDItemDateAdded "\1"/e'
 }
 
-ds () {
+dl () {
     DOWNLOADS="$HOME/Downloads"
     cd $DOWNLOADS
     topdownload="$(mdls -name kMDItemFSName -name kMDItemDateAdded $DOWNLOADS/* | \
@@ -93,22 +108,30 @@ ds () {
 	awk 'NR < 6 { print }'
 }
 
-rec () {
+recent () {
     date +'%Y-%m-%d %T';
-    mdls -name kMDItemFSName -name kMDItemDateAdded * | \
-	paste - - | \
+    mdls -name kMDItemFSName -name kMDItemContentCreationDate -name kMDItemContentType * .* | \
+	paste - - - | \
 	perl -ln  -e '
-	     use Shell; /"(.+?)"/;
-	     $name = $1;
+	     /"(.+?)".*"(.+?)"/;
+	     $type = $1;
+	     $name = $2;
 	     @s = split;
-	     print $s[2], " ", $s[3], " ", $name
+	     if ($s[2] eq "(null)") {
+		} else {
+	     if ($type eq "public.folder") {
+	         print "folder ", $s[2], " ", $s[3], " ", $name;
+	     } else {
+	         print "------ ", $s[2], " ", $s[3], " ", $name;
+	     }
+	     }
     ' | \
-	sort -r
+	sort -k2,3 -r | less
 }
 
 ds () {
     cd $dl
-    rec
+    recent
 }
 
 # mkdir, cd into it
