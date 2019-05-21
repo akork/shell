@@ -13,7 +13,7 @@ echo "~/yd/cfg/sh/sh.sh loading"
 export scratch='/Users/ak/Dropbox/Studies/_CS/playground/scratch'
 export dot='/users/ak/dropbox/settings'
 export dl='/users/ak/downloads'
-export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
+# export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home"
 
 # }}}
@@ -40,9 +40,8 @@ alias s='ls -G'
 alias s.='ls -aG'
 alias s..='ls -alG'
 
-alias d='ls'
-alias d.='ls -a'
-alias d..='ls -al'
+alias d='ls -l'
+alias d.='ls -la'
 
 # open
 alias o='open'
@@ -64,6 +63,10 @@ alias e='emacs -nw --debug-init'
 alias em='emacs &!'
 alias ema='env HOME=/Users/ak/.emacs-vanilla emacs -nw'
 alias emac='env HOME=/Users/ak/.emacs-vanilla emacs &!'
+alias emacsd='emacs --daemon'
+alias ec='emacsclient -c'
+alias et='emacsclient -t'
+alias e.='emacsclient -t .'
 
 # binaries
 alias cal='gcal --starting-day=1 .+'
@@ -117,13 +120,12 @@ recent () {
 	     $type = $1;
 	     $name = $2;
 	     @s = split;
-	     if ($s[2] eq "(null)") {
-		} else {
-	     if ($type eq "public.folder") {
-	         print "folder ", $s[2], " ", $s[3], " ", $name;
-	     } else {
-	         print "------ ", $s[2], " ", $s[3], " ", $name;
-	     }
+	     if ($s[2] ne "(null)") {
+	     	if ($type eq "public.folder") {
+	           print "folder ", $s[2], " ", $s[3], " ", $name;
+	     	} else {
+	          print "------ ", $s[2], " ", $s[3], " ", $name;
+	     	}
 	     }
     ' | \
 	sort -k2,3 -r | less
