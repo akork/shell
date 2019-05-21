@@ -79,6 +79,8 @@ alias trl='transmission-remote -l'
 alias trdf='transmission-daemon --foreground'
 alias trd='transmission-daemon'
 
+alias | sed 's/^alias //' | sed -E "s/^([^=]+)='(.+?)'$/\1=\2/" | sed "s/'\\\\''/'/g" | sed "s/'\\\\$/'/;" | sed -E 's/^([^=]+)=(.+)$/alias \1 \2/' >~/.emacs.d/eshell/alias
+
 # }}}
 # functions {{{
 
