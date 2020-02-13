@@ -6,7 +6,10 @@
 #       /etc/bashrc
 #       ~/.bashrc
 
-echo "~/yd/cfg/sh/sh.sh loading"
+if [[ ! -z "${SHELL_LOG}" ]]; then
+	echo "~/yd/cfg/sh/sh.sh"
+fi
+
 
 # help
 
@@ -38,6 +41,8 @@ export PATH="$dot/scripts:$PATH"
 # }}}
 # aliases {{{
 
+alias tp='type'
+
 # navigation
 alias pd='popd'
 alias dp='popd'
@@ -56,6 +61,7 @@ alias s..='ls -alG'
 # open
 alias o='open'
 alias oa='open -a'
+alias code='open -a Visual\ Studio\ Code'
 alias otp='dl && open $topdownload'
 alias ods='dl && open $topdownload'
 # alias topd='dl && open $topdownload'
