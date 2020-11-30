@@ -15,17 +15,14 @@ fi
 
 #ps -ef | grep 'jupyter' | grep -v grep | awk '{print $2}' | xargs kill -9
 
-
 # variables {{{
 
 export scratch='/Users/ak/Dropbox/Studies/_CS/playground/scratch'
-export dot='/users/ak/yd/cfg'
-export dn='/users/ak/downloads/'
-export tr='/users/ak/yd/trnt/'
-export y='/users/ak/yd/'
-export dt="$HOME/yd/trnt/"
-export dd="$HOME/Downloads/"
-export cs="$HOME/yd/cs/"
+export CF='/users/ak/yd/cfg/'
+export D="$HOME/yd/"
+export DT="$HOME/yd/trnt/"
+export DD="$HOME/Downloads/"
+export CS="$HOME/yd/cs/"
 
 # export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk-12.0.1.jdk/Contents/Home"
@@ -34,29 +31,36 @@ export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk-12.0.1.jdk/Contents/
 # path {{{
 
 # /etc/paths
-export PATH="$dot/scripts:$PATH"
-# export PATH="/Users/ak/anaconda3/bin:$PATH"
+export PATH="$CF""scripts:$PATH"
 #export PATH="/opt/local/bin:$PATH" # macports location
 
 # }}}
 # aliases {{{
 
-alias tp='type'
+#ls
+eval `gdircolors ~/.dircolors`
+alias i='gls -lBs --color=auto'
+alias ii='gls -B --color=auto'
+alias ia='gls -lABs --color=auto'
+alias iaa='gls -lAs --color=auto'
+
 
 # navigation
+alias c='cd'
+alias di='dirs -v | head -10'
+alias dip='cd ~1'
+alias di2='cd ~2'
+alias di3='cd ~3'
+alias di4='cd ~4'
+alias di5='cd ~5'
+alias di6='cd ~6'
 alias pd='popd'
-alias dp='popd'
 alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
 
-# ls
-# alias di='dirs -v | head -10'
-alias ra='ranger'
-alias s='ls -G'
-alias s.='ls -aG'
-alias s..='ls -alG'
+alias pse='ps -ef | grep'
 
 # open
 alias o='open'
@@ -67,7 +71,9 @@ alias ods='dl && open $topdownload'
 # alias topd='dl && open $topdownload'
 
 # git
-git config --global alias.hist "log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(bold white)%s %C(reset) %C(green){{%an}}%C(reset) %C(bold red)%d%C(reset)' --graph --date=short"
+# git config --global alias.hist "log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(bold white)%s %C(reset) %C(green){{%an}}%C(reset) %C(bold red)%d%C(reset)' --graph --date=short"
+alias s='git status'
+alias hist='git hist'
 alias gs='git status'
 alias gc='git commit -m'
 alias gca='git commit -am'
@@ -75,7 +81,7 @@ alias gr='git reset'
 alias kraken='open -a Gitkraken --args -p "$(pwd)"'
 
 # emacs
-alias e='emacs -nw --debug-init'
+alias ee='emacs -nw --debug-init'
 alias em='emacs &!'
 alias ema='env HOME=/Users/ak/.emacs-vanilla emacs -nw'
 alias emac='env HOME=/Users/ak/.emacs-vanilla emacs &!'
@@ -84,19 +90,19 @@ alias ec='emacsclient -c'
 alias et='emacsclient -t'
 alias e.='emacsclient -t .'
 
-# binaries
-alias cal='gcal --starting-day=1 .+'
-alias py='python3'
-#alias vi='stty stop '' -ixoff ; vim'
-alias vi=vim
+#transmission
 alias tr=transmission-remote
 alias trla='transmission-remote -l'
-alias trl='transmission-remote -l | perl $dot/sh/trl.pl'
-# alias tri='transmission-remote -t '
+alias trl='transmission-remote -l | perl $CF/scripts/trl.pl'
 alias trdf='transmission-daemon --foreground'
 alias trd='transmission-daemon'
+
+#apps
+alias vi=vim
+alias py='python3'
 alias jn='jupyter notebook'
-alias psef='ps -ef | grep'
+alias cal='gcal --starting-day=1 .+'
+
 #alias g++='ASAN_OPTIONS=detect_leaks=1 && /usr/local/Cellar/llvm/9.0.0/bin/clang++ -isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include'
 
 # mkdir -p ~/.emacs.d/eshell
@@ -112,6 +118,12 @@ tri () {
 
 trad () {
 	transmission-remote -t $1 -rad
+}
+
+# fancy transmission-remote list
+trss () {
+	trl | awk 'NR<2 {printf "%-4s %+4s %+8s %+2s %-8s %+5s %-8s %s\n", $1, $2, $3, "B", $4, $6, $08, substr($0, index($0, $09))}
+		  	   NR>1 {printf "%-4s %+4s %+8s %+2s %-8s %+5s %-8s %s\n", $1, $2, $3, $4, $5, $7, $9, substr($0, index($0, $10))}'
 }
 
 # recent downloads
@@ -143,7 +155,7 @@ topd () {
     #              sort -r | \
     #              cut -d'"' -f2 | \
     #              awk 'NR < 2 { print }')"
-    mdls -name kMDItemFSName -name kMDItemDateAdded $dd/* | \
+    mdls -name kMDItemFSName -name kMDItemDateAdded $DD/* | \
         sed 'N;s/\n//' | \
 		awk '{print $3 " " $4 " " substr($0,index($0,$7))}' | \
 		sort -r | \
@@ -158,7 +170,7 @@ topt () {
     #              sort -r | \
     #              cut -d'"' -f2 | \
     #              awk 'NR < 2 { print }')"
-    mdls -name kMDItemFSName -name kMDItemDateAdded $dt/* | \
+    mdls -name kMDItemFSName -name kMDItemDateAdded $DT/* | \
         sed 'N;s/\n//' | \
 		awk '{print $3 " " $4 " " substr($0,index($0,$7))}' | \
 		sort -r | \
@@ -198,9 +210,18 @@ ty () {
    type -a $1 | perl -lne 'print /(\/.*[ \)]?)/;' | xargs -n 1 readlink
 }
 
-trss () {
-	trl | awk 'NR<2 {printf "%-4s %+4s %+8s %+2s %-8s %+5s %-8s %s\n", $1, $2, $3, "B", $4, $6, $08, substr($0, index($0, $09))}
-		  	   NR>1 {printf "%-4s %+4s %+8s %+2s %-8s %+5s %-8s %s\n", $1, $2, $3, $4, $5, $7, $9, substr($0, index($0, $10))}'
+tp () {
+	type -a $1 | tp.py
+}
+
+# jupyter lab
+jl () {
+	if [[ $# -eq 0 ]]; then
+		jupyterdir=""
+	else
+		jupyterdir=$1
+	fi
+	py -m jupyter lab $jupyterdir --browser safari
 }
 
 # }}}
